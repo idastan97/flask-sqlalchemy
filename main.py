@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, request, make_response, session, abort
+from flask import jsonify, Flask, render_template, redirect, request, make_response, session, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
+import news_api
 from data import db_session
 from data.news import News
 from data.users import User
@@ -166,8 +167,14 @@ def news_delete(nid):
     return redirect('/')
 
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
 def main():
     db_session.global_init("db/blogs.sqlite")
+    app.register_blueprint(news_api.blueprint)
     app.run()
 
 
