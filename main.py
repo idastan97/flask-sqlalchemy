@@ -1,7 +1,9 @@
 from flask import jsonify, Flask, render_template, redirect, request, make_response, session, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_restful import abort, Api
 
 import news_api
+import news_resources
 from data import db_session
 from data.news import News
 from data.users import User
@@ -10,9 +12,15 @@ from newsform import NewsForm
 from registerform import RegisterForm
 
 app = Flask(__name__)
+api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# для списка объектов
+api.add_resource(news_resources.NewsListResource, '/api/v2/news')
+# для одного объекта
+api.add_resource(news_resources.NewsResource, '/api/v2/news/<int:news_id>')
 
 
 @login_manager.user_loader
