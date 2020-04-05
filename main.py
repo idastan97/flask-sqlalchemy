@@ -190,7 +190,7 @@ def run_local_remote_available():
 
 def run_local_with_ngrok():
     run_with_ngrok(app)
-    app.run()
+    run_local_remote_available()
 
 
 def run_local():
