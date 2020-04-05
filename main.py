@@ -1,6 +1,8 @@
 from flask import jsonify, Flask, render_template, redirect, request, make_response, session, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_restful import abort, Api
+import os
+from flask_ngrok import run_with_ngrok
 
 import news_api
 import news_resources
@@ -13,6 +15,7 @@ from registerform import RegisterForm
 
 app = Flask(__name__)
 api = Api(app)
+
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -180,10 +183,24 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
+def run_local_remote_available():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+
+
+def run_local_with_ngrok():
+    run_with_ngrok(app)
+    app.run()
+
+
+def run_local():
+    app.run()
+
+
 def main():
     db_session.global_init("db/blogs.sqlite")
     app.register_blueprint(news_api.blueprint)
-    app.run()
+    run_local()
 
 
 if __name__ == '__main__':
