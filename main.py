@@ -200,7 +200,7 @@ def run_local():
 def main():
     db_session.global_init("db/blogs.sqlite")
     app.register_blueprint(news_api.blueprint)
-    run_local_remote_available()
+    run_local_with_ngrok()
 
 
 if __name__ == '__main__':
